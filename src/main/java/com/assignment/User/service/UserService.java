@@ -15,6 +15,14 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository;
+    public Boolean checkIfUserExist(Long id)
+    {
+        if(!userRepository.existsById(id))
+        {
+            return false;
+        }
+        return true;
+    }
 
     public User addUser(User user)
     {
@@ -22,43 +30,26 @@ public class UserService {
     }
     public List<User> getAllUser()
     {
-        if(userRepository.findAll().size()==0)
-        {
-            throw new NoUserInDatabaseException();
-        }
         return userRepository.findAll();
     }
     public User getUserById(Long id){
-        if(!userRepository.existsById(id))
-        {
-            throw new UserNotFoundException("User not found with id::"+id);
-        }
+
         return userRepository.findById(id).get();
     }
     public void deleteUser(Long id)
     {
-        if(!userRepository.existsById(id))
-        {
-            throw new UserNotFoundException("User not found with id::"+id);
-        }
         userRepository.deleteById(id);
     }
     public User updateUser(Long id, User user)
     {
-        if(!userRepository.existsById(id))
-        {
-            throw new UserNotFoundException("User not found with id::"+id);
-        }
 
-      else
-        {
-            Optional<User> byId = userRepository.findById(id);
-            User userById=byId.get();
-            userById.setName(user.getName());
-           userById.setEmail(user.getEmail());
-           userById.setPhone(user.getPhone());
-           return userRepository.save(userById);
-        }
+        Optional<User> byId = userRepository.findById(id);
+        User userById=byId.get();
+        userById.setName(user.getName());
+        userById.setEmail(user.getEmail());
+        userById.setPhone(user.getPhone());
+        return userRepository.save(userById);
+
 
     }
 }
